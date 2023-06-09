@@ -1,6 +1,8 @@
 const express = require("express");
 const clc = require("cli-color");
 require("dotenv").config();
+const session = require("express-session");
+const mongoDbSession = require("connect-mongodb-session")(session);
 const AuthRouter = require("./Controllers/AuthController");
 // file imports
 const db = require("./db");
@@ -9,6 +11,20 @@ const PORT = process.env.PORT;
 
 // middlewares
 server.use(express.json());
+
+const store = new mongoDbSession({
+  uri: process.env.MONGO_URI,
+  collection: "sessions",
+});
+
+server.use(
+  session({
+    secret: process.env.SECRECT_KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 // routes
 server.get("/", (req, res) => {
