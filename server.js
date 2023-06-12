@@ -6,6 +6,8 @@ const mongoDbSession = require("connect-mongodb-session")(session);
 const AuthRouter = require("./Controllers/AuthController");
 // file imports
 const db = require("./db");
+const BlogRouter = require("./Controllers/BlogController");
+const { isAuth } = require("./Middlewares/AuthMiddleware");
 const server = express();
 const PORT = process.env.PORT;
 
@@ -35,6 +37,7 @@ server.get("/", (req, res) => {
 });
 
 server.use("/auth", AuthRouter);
+server.use("/blog", isAuth, BlogRouter);
 
 server.listen(PORT, (req, res) => {
   console.log(clc.yellow.underline(`Server is running on port ${PORT}`));

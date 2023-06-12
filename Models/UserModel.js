@@ -1,5 +1,6 @@
 const UserSchema = require("../Schemas/UserSchema");
 const bcrypt = require("bcrypt");
+const ObjectId = require("mongodb").ObjectId;
 
 let User = class {
   username;
@@ -12,6 +13,24 @@ let User = class {
     this.name = name;
     this.email = email;
     this.password = password;
+  }
+
+  static verifyUserId({ userId }) {
+    return new Promise(async (resolve, reject) => {
+      console.log("Here", ObjectId.isValid(userId));
+      if (!ObjectId.isValid(userId)) {
+        reject("Invalid userId format");
+      }
+      try {
+        const userDb = await UserSchema.findOne({ _id: userId });
+        if (!userDb) {
+          reject(`No user corresponding to this ${userId}`);
+        }
+        resolve(userDb);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   registerUser() {
