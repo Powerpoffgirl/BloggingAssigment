@@ -7,12 +7,14 @@ const Blogs = class {
   textBody;
   userId;
   creationDateTime;
+  blogId;
 
-  constructor({ title, textBody, userId, creationDateTime }) {
+  constructor({ title, textBody, userId, creationDateTime, blogId }) {
     this.title = title;
     this.creationDateTime = creationDateTime;
     this.textBody = textBody;
     this.userId = userId;
+    this.blogId = blogId;
   }
 
   createBlog() {
@@ -35,11 +37,12 @@ const Blogs = class {
     });
   }
 
-  static getBlogs({ skip }) {
+  static getBlogs({ followingUserIds, skip }) {
     return new Promise(async (resolve, reject) => {
       // sort, Pagination
       try {
         const blogsDb = await BlogSchema.aggregate([
+          { $match: { userId: { $in: followingUserIds } } },
           { $sort: { creationDateTime: -1 } },
           {
             $facet: {
@@ -47,6 +50,7 @@ const Blogs = class {
             },
           },
         ]);
+
         console.log(blogsDb[0].data);
         resolve(blogsDb[0].data);
       } catch (error) {
@@ -71,6 +75,59 @@ const Blogs = class {
         ]);
         console.log(myBlogsDb[0].data);
         resolve(myBlogsDb[0].data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  getBlogDataFromId() {
+    return new Promise(async (resolve, reject) => {
+      console.log("here", this.blogId);
+      try {
+        const blogDb = await BlogSchema.findOne({
+          _id: this.blogId,
+        });
+
+        if (!blogDb) {
+          reject("Blog not found");
+        }
+        resolve(blogDb);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  updateBlog() {
+    return new Promise(async (resolve, reject) => {
+      let newBlogData = {};
+      try {
+        if (this.title) {
+          newBlogData.title = this.title;
+        }
+        if (this.textBody) {
+          newBlogData.textBody = this.textBody;
+        }
+
+        const oldData = await BlogSchema.findOneAndUpdate(
+          { _id: this.blogId },
+          newBlogData
+        );
+        resolve(oldData);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  deleteBlog() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const oldBlogDb = await BlogSchema.findOneAndDelete({
+          _id: this.blogId,
+        });
+        resolve(oldBlogDb);
       } catch (error) {
         reject(error);
       }

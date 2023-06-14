@@ -31,7 +31,7 @@ AuthRouter.post("/register", async (req, res) => {
 
       try {
         const userDb = await userObj.registerUser();
-
+        console.log(userDb);
         return res.send({
           status: 200,
           message: "User Created Successfully",
