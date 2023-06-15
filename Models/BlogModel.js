@@ -42,7 +42,12 @@ const Blogs = class {
       // sort, Pagination
       try {
         const blogsDb = await BlogSchema.aggregate([
-          { $match: { userId: { $in: followingUserIds } } },
+          {
+            $match: {
+              userId: { $in: followingUserIds },
+              isDeleted: { $ne: true },
+            },
+          },
           { $sort: { creationDateTime: -1 } },
           {
             $facet: {
@@ -51,7 +56,7 @@ const Blogs = class {
           },
         ]);
 
-        console.log(blogsDb[0].data);
+        console.log(blogsDb);
         resolve(blogsDb[0].data);
       } catch (error) {
         reject(error);
@@ -65,7 +70,9 @@ const Blogs = class {
       console.log(skip, userId);
       try {
         const myBlogsDb = await BlogSchema.aggregate([
-          { $match: { userId: new ObjectId(userId) } },
+          {
+            $match: { userId: new ObjectId(userId), isDeleted: { $ne: true } },
+          },
           { $sort: { creationDateTime: -1 } },
           {
             $facet: {
@@ -124,9 +131,15 @@ const Blogs = class {
   deleteBlog() {
     return new Promise(async (resolve, reject) => {
       try {
-        const oldBlogDb = await BlogSchema.findOneAndDelete({
-          _id: this.blogId,
-        });
+        // const oldBlogDb = await BlogSchema.findOneAndDelete({
+        //   _id: this.blogId,
+        // });
+        // resolve(oldBlogDb);
+
+        const oldBlogDb = await BlogSchema.findOneAndUpdate(
+          { _id: this.blogId },
+          { isDeleted: true, deletionDateTime: new Date() }
+        );
         resolve(oldBlogDb);
       } catch (error) {
         reject(error);

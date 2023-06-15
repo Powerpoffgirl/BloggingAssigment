@@ -9,6 +9,7 @@ const db = require("./db");
 const BlogRouter = require("./Controllers/BlogController");
 const { isAuth } = require("./Middlewares/AuthMiddleware");
 const FollowRouter = require("./Controllers/FollowController");
+const cleanUpBin = require("./cron");
 const server = express();
 const PORT = process.env.PORT;
 
@@ -43,4 +44,5 @@ server.use("/follow", isAuth, FollowRouter);
 
 server.listen(PORT, (req, res) => {
   console.log(clc.yellow.underline(`Server is running on port ${PORT}`));
+  cleanUpBin();
 });

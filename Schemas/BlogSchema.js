@@ -18,6 +18,15 @@ const blogsSchema = new Schema({
     type: Schema.Types.ObjectId,
     require: true,
   },
+  isDeleted: {
+    type: Boolean,
+    require: true,
+    default: false,
+  },
+  deletionDateTime: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("blogs", blogsSchema);

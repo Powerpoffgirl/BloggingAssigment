@@ -53,7 +53,6 @@ BlogRouter.post("/create-blog", async (req, res) => {
 //  /blog/get-blogs?skip=5
 BlogRouter.get("/get-blogs", async (req, res) => {
   const skip = req.query.skip || 0;
-
   const followerUserId = req.session.user.userId;
 
   try {
@@ -67,14 +66,14 @@ BlogRouter.get("/get-blogs", async (req, res) => {
     });
 
     const blogDb = await Blogs.getBlogs({ followingUserIds, skip });
-    console.log("I am blogDb", blogDb);
+    // console.log("I am blogDb", blogDb);
     return res.send({
       status: 200,
       message: "Read success",
       data: blogDb,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.send({
       status: 500,
       message: "Database error",
