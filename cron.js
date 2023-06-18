@@ -4,7 +4,7 @@ const clc = require("cli-color");
 
 function cleanUpBin() {
   cron.schedule("* * * * *", async () => {
-    console.log("cron is working");
+    // console.log("cron is working");
 
     // find the blogs where isDeleted true
     const deletedBlogs = await BlogSchema.aggregate([

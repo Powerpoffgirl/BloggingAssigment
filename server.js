@@ -11,6 +11,7 @@ const { isAuth } = require("./Middlewares/AuthMiddleware");
 const FollowRouter = require("./Controllers/FollowController");
 const cleanUpBin = require("./cron");
 const server = express();
+const cors = require("cors");
 const PORT = process.env.PORT;
 
 // middlewares
@@ -20,6 +21,8 @@ const store = new mongoDbSession({
   uri: process.env.MONGO_URI,
   collection: "sessions",
 });
+
+server.use(cors());
 
 server.use(
   session({
