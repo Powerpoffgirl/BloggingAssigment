@@ -4,6 +4,7 @@ const { cleanUpAndValidate } = require("../utils/AuthUtils");
 const User = require("../Models/UserModel");
 const { isAuth } = require("../Middlewares/AuthMiddleware");
 
+
 //  /auth/register
 AuthRouter.post("/register", async (req, res) => {
   console.log(req.body);

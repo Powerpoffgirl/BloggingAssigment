@@ -1,5 +1,5 @@
 const UserSchema = require("../Schemas/UserSchema");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const ObjectId = require("mongodb").ObjectId;
 
 let User = class {
@@ -35,7 +35,7 @@ let User = class {
 
   registerUser() {
     return new Promise(async (resolve, reject) => {
-      const hashedPassword = await bcrypt.hash(
+      const hashedPassword = await bcryptjs.hash(
         this.password,
         parseInt(process.env.SALT)
       );
@@ -91,7 +91,7 @@ let User = class {
         }
 
         //match the password
-        const isMatch = await bcrypt.compare(password, userDb.password);
+        const isMatch = await bcryptjs.compare(password, userDb.password);
 
         if (!isMatch) {
           reject("Password Does not matched");
