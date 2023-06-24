@@ -58,4 +58,3 @@ Array of 30 chars string stored in blog schema -20 hashtags at max
 2. Trending: Blogs on a particular hashtag being used most in last 3 hrs.
 3. Laugh/Like on blogs- Tweet schema will have a laughReaction, likeReaction keys/{type:laugh/like, tweetId, userId}
 4. Comments- Nested blogs
-![image](https://github.com/Powerpoffgirl/BloggingAssigment/assets/80877414/0628987c-631c-44d5-abb5-ca063a2ae533)
