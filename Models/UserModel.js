@@ -62,7 +62,7 @@ let User = class {
         const userDb = await UserSchema.findOne({
           $or: [{ email }, { username }],
         });
-
+        console.log("userDb", userDb)
         if (userDb && userDb.email === email) {
           reject("Email Already Exit");
         }
@@ -70,7 +70,7 @@ let User = class {
         if (userDb && userDb.username === username) {
           reject("Username Already Exit");
         }
-
+        else
         return resolve();
       } catch (error) {
         reject(error);

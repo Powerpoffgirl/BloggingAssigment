@@ -18,7 +18,7 @@ AuthRouter.post("/register", async (req, res) => {
       } catch (error) {
         return res.send({
           status: 400,
-          message: "Error1 Occurred",
+          message: "Error Occurred",
           error: error,
         });
       }
