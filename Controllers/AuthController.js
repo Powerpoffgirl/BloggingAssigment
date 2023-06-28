@@ -10,6 +10,7 @@ AuthRouter.post("/register", async (req, res) => {
   console.log(req.body);
   const { name, username, email, password } = req.body;
 
+  
   await cleanUpAndValidate({ name, email, password, username })
     .then(async () => {
       try {
@@ -17,7 +18,7 @@ AuthRouter.post("/register", async (req, res) => {
       } catch (error) {
         return res.send({
           status: 400,
-          message: "Error Occurred",
+          message: "Error1 Occurred",
           error: error,
         });
       }

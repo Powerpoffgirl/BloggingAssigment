@@ -16,6 +16,7 @@ const PORT = process.env.PORT;
 
 // middlewares
 server.use(express.json());
+server.use(express.urlencoded({extended:true}))
 
 const store = new mongoDbSession({
   uri: process.env.MONGO_URI,
