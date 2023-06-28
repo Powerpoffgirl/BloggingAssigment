@@ -12,7 +12,7 @@ const FollowRouter = require("./Controllers/FollowController");
 const cleanUpBin = require("./cron");
 const server = express();
 const cors = require("cors");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 // middlewares
 server.use(express.json());
