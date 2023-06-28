@@ -9,7 +9,6 @@ const { isAuth } = require("../Middlewares/AuthMiddleware");
 AuthRouter.post("/register", async (req, res) => {
   console.log(req.body);
   const { name, username, email, password } = req.body;
-
   
   await cleanUpAndValidate({ name, email, password, username })
     .then(async () => {

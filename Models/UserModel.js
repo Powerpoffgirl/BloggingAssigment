@@ -2,6 +2,8 @@ const UserSchema = require("../Schemas/UserSchema");
 const bcryptjs = require("bcryptjs");
 const ObjectId = require("mongodb").ObjectId;
 
+let SALT=11
+
 let User = class {
   username;
   name;
@@ -37,7 +39,8 @@ let User = class {
     return new Promise(async (resolve, reject) => {
       const hashedPassword = await bcryptjs.hash(
         this.password,
-        parseInt(process.env.SALT)
+        // parseInt(process.env.SALT)
+        parseInt(SALT)
       );
 
       const user = new UserSchema({

@@ -12,14 +12,19 @@ const FollowRouter = require("./Controllers/FollowController");
 const cleanUpBin = require("./cron");
 const server = express();
 const cors = require("cors");
-const PORT = process.env.PORT || 8000;
+
+let MONGO_URI=`mongodb+srv://emailjyotisingh13:BYlqE2fM976e745E@cluster0.3d1lybe.mongodb.net/bloggingDb` 
+// let SALT=11
+let SECRECT_KEY='MARCH BLOGG-APP'
+
+// const PORT = process.env.PORT || 8000;
 
 // middlewares
 server.use(express.json());
 server.use(express.urlencoded({extended:true}))
 
 const store = new mongoDbSession({
-  uri: process.env.MONGO_URI,
+  uri:MONGO_URI,
   collection: "sessions",
 });
 
@@ -27,13 +32,15 @@ server.use(cors());
 
 server.use(
   session({
-    secret: process.env.SECRECT_KEY,
+    // secret: process.env.SECRECT_KEY,
+    secret: SECRECT_KEY,
     resave: false,
     saveUninitialized: false,
     store: store,
   })
 );
 
+server.use(AuthRouter);
 // routes
 server.get("/", (req, res) => {
   return res.send({
@@ -42,11 +49,12 @@ server.get("/", (req, res) => {
   });
 });
 
-server.use("/auth", AuthRouter);
+
+// server.use("/auth", AuthRouter);
 server.use("/blog", isAuth, BlogRouter);
 server.use("/follow", isAuth, FollowRouter);
 
-server.listen(PORT, (req, res) => {
-  console.log(clc.yellow.underline(`Server is running on port ${PORT}`));
+server.listen(8000, (req, res) => {
+  console.log(clc.yellow.underline(`Server is running on port 8000`));
   cleanUpBin();
 });
