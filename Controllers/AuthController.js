@@ -80,6 +80,8 @@ AuthRouter.post("/login", async (req, res) => {
     // Match the password
     const isMatch = await bcryptjs.compare(password, userDb.password);
 
+    console.log("IS MATCH", isMatch)
+
     if (!isMatch) {
       return res.status(401).json({
         status: 401,
@@ -94,6 +96,8 @@ AuthRouter.post("/login", async (req, res) => {
       email: userDb.email,
       userId: userDb._id,
     };
+
+    console.log("REQUEST SESSION AFTER LOGIN", req.session)
 
     return res.status(200).json({
       status: 200,
@@ -111,6 +115,7 @@ AuthRouter.post("/login", async (req, res) => {
 });
 
 AuthRouter.post("/logout", isAuth, (req, res) => {
+  console.log("REQUEST SESSION BEFORE LOGOUT", req.session)
   const user = req.session.user;
 
   req.session.destroy((err) => {

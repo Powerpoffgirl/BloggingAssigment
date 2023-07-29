@@ -17,14 +17,19 @@ const PORT = process.env.PORT || 8000;
 
 // middlewares
 server.use(express.json());
-server.use(express.urlencoded({extended:true}))
+server.use(express.urlencoded({ extended: true }));
 
 const store = new mongoDbSession({
-  uri:process.env.MONGO_URI,
+  uri: process.env.MONGO_URI,
   collection: "sessions",
 });
 
-server.use(cors());
+server.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with the actual origin of your React app
+    credentials: true,
+  })
+);
 
 server.use(
   session({
@@ -43,7 +48,6 @@ server.get("/", (req, res) => {
     message: "Welcome to your blogging app",
   });
 });
-
 
 server.use("/auth", AuthRouter);
 server.use("/blog", isAuth, BlogRouter);

@@ -14,7 +14,7 @@ function cleanUpBin() {
     if (deletedBlogs.length > 0) {
       deletedBlogs.forEach(async (blog) => {
         // check the time if it is greater than 30 days or not
-        console.log(new Date(blog.deletionDateTime).getTime());
+        // console.log(new Date(blog.deletionDateTime).getTime());
 
         const diff =
           (Date.now() - new Date(blog.deletionDateTime).getTime()) /

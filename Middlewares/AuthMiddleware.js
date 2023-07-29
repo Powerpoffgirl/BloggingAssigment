@@ -1,5 +1,6 @@
 const isAuth = (req, res, next) => {
-  if (req.session.isAuth) {
+  console.log("REQUEST SESSION IN ISAUTH", req.session.isAuth )
+  if (req.session.isAuth && req.session.user) {
     next();
   } else {
     return res.send({
