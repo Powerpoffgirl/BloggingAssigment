@@ -2,8 +2,6 @@ const UserSchema = require("../Schemas/UserSchema");
 const bcryptjs = require("bcryptjs");
 const ObjectId = require("mongodb").ObjectId;
 
-let SALT=11
-
 let User = class {
   username;
   name;
@@ -39,8 +37,7 @@ let User = class {
     return new Promise(async (resolve, reject) => {
       const hashedPassword = await bcryptjs.hash(
         this.password,
-        // parseInt(process.env.SALT)
-        parseInt(SALT)
+        parseInt(process.env.SALT)
       );
 
       const user = new UserSchema({
@@ -83,29 +80,57 @@ let User = class {
 
   static loginUser({ loginId, password }) {
     return new Promise(async (resolve, reject) => {
-      //find the user with loginId
       try {
+        // Find the user with loginId
         const userDb = await UserSchema.findOne({
           $or: [{ email: loginId }, { username: loginId }],
         });
-
+  
         if (!userDb) {
-          return reject("User does not exit");
+          return reject("User does not exist");
         }
-
-        //match the password
+  
+        // Match the password
         const isMatch = await bcryptjs.compare(password, userDb.password);
-
+  
         if (!isMatch) {
-          reject("Password Does not matched");
+          return reject("Incorrect password");
         }
-
+  
         resolve(userDb);
       } catch (error) {
         reject(error);
       }
     });
   }
+  
+
+  // static loginUser({ loginId, password }) {
+  //   console.log("LOGIN FROM MODEL", loginId+"LOGIN FROM PASSWORD", password)
+  //   return new Promise(async (resolve, reject) => {
+  //     //find the user with loginId
+  //     try {
+  //       const userDb = await UserSchema.findOne({
+  //         $or: [{ email: loginId }, { username: loginId }],
+  //       });
+
+  //       if (!userDb) {
+  //         return reject("User does not exit");
+  //       }
+
+  //       //match the password
+  //       const isMatch = await bcryptjs.compare(password, userDb.password);
+
+  //       if (!isMatch) {
+  //         reject("Password Does not matched");
+  //       }
+
+  //       resolve(userDb);
+  //     } catch (error) {
+  //       reject(error);
+  //     }
+  //   });
+  // }
 };
 
 module.exports = User;

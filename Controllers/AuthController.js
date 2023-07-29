@@ -55,19 +55,39 @@ AuthRouter.post("/register", async (req, res) => {
     });
 });
 
+// Assuming you have properly defined the AuthRouter using Express Router
 AuthRouter.post("/login", async (req, res) => {
-  const { loginId, password } = req.body;
-
-  if (!loginId || !password)
-    return res.send({
-      status: 400,
-      message: "Missing Credentials",
-    });
-
   try {
-    const userDb = await User.loginUser({ loginId, password });
+    console.log("REQUEST BODY",req.body)
+    const { email, password } = req.body;
+    // console.log("LOGIN_ID", loginId + "PASSWORD", password)
+    if (!email || !password) {
+      return res.status(400).json({
+        status: 400,
+        message: "Missing Credentials",
+      });
+    }
 
-    //session bases authentication
+    const userDb = await User.loginUser({ email, password });
+
+    if (!userDb) {
+      return res.status(404).json({
+        status: 404,
+        message: "User not found",
+      });
+    }
+
+    // Match the password
+    const isMatch = await bcryptjs.compare(password, userDb.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        status: 401,
+        message: "Incorrect password",
+      });
+    }
+
+    // Session-based authentication
     req.session.isAuth = true;
     req.session.user = {
       username: userDb.username,
@@ -75,16 +95,17 @@ AuthRouter.post("/login", async (req, res) => {
       userId: userDb._id,
     };
 
-    return res.send({
+    return res.status(200).json({
       status: 200,
       message: "Login Successfully",
       data: userDb,
     });
   } catch (error) {
-    return res.send({
+    console.error("Error occurred during login:", error);
+    return res.status(500).json({
       status: 500,
-      message: "Error Occured",
-      error: error,
+      message: "Error Occurred",
+      error: error.message, // Sending only the error message for security
     });
   }
 });

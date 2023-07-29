@@ -19,7 +19,7 @@ function cleanUpBin() {
         const diff =
           (Date.now() - new Date(blog.deletionDateTime).getTime()) /
           (1000 * 60 * 60 * 24);
-        console.log(diff);
+        // console.log(diff);
         // if > 30 days find and delete
 
         if (diff > 30) {

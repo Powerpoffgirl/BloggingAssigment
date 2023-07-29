@@ -4,8 +4,9 @@ const User = require("../Models/UserModel");
 const Blogs = require("../Models/BlogModel");
 const BlogRouter = express.Router();
 const { followingUsersList } = require("../Models/FollowModel");
+const { isAuth } = require("../Middlewares/AuthMiddleware");
 
-BlogRouter.post("/create-blog", async (req, res) => {
+BlogRouter.post("/create-blog",isAuth, async (req, res) => {
   const { title, textBody } = req.body;
   const userId = req.session.user.userId;
   const creationDateTime = new Date();
