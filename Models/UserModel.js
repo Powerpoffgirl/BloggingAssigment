@@ -78,12 +78,13 @@ let User = class {
     });
   }
 
-  static loginUser({ loginId, password }) {
+  static loginUser({ email, password }) {
+
     return new Promise(async (resolve, reject) => {
       try {
         // Find the user with loginId
         const userDb = await UserSchema.findOne({
-          $or: [{ email: loginId }, { username: loginId }],
+           email: email
         });
   
         if (!userDb) {

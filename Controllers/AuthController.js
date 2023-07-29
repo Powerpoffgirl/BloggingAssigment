@@ -3,7 +3,7 @@ const AuthRouter = express.Router();
 const { cleanUpAndValidate } = require("../utils/AuthUtils");
 const User = require("../Models/UserModel");
 const { isAuth } = require("../Middlewares/AuthMiddleware");
-
+const bcryptjs = require("bcryptjs");
 
 //  /auth/register
 AuthRouter.post("/register", async (req, res) => {
