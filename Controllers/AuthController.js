@@ -118,24 +118,22 @@ AuthRouter.post("/logout", isAuth, async(req, res) => {
   console.log("REQUEST SESSION BEFORE LOGOUT", req.session)
   const user = req.session.user;
 
-  await req.session.destroy()
-  
-  // (err) => {
-    // if (err) {
-    //   return res.send({
-    //     status: 400,
-    //     message: "Logout unsuccessfull",
-    //     error: err,
-    //   });
-    // }
-    
-    return res.send({
-      status: 200,
-      message: "Logout Sucessfully",
-      data: user,
-    });
-    
+ req.session.destroy((err) => {
+    if (err) {
+      return res.send({
+        status: 400,
+        message: "Logout unsuccessfull",
+        error: err,
+      });
+    }
+    else{
+      return res.send({
+        status: 200,
+        message: "Logout Sucessfully",
+        data: user,
+      });
+    }
   });
-// });
+});
 
 module.exports = AuthRouter;
