@@ -114,26 +114,40 @@ AuthRouter.post("/login", async (req, res) => {
   }
 });
 
-AuthRouter.post("/logout", isAuth, async(req, res) => {
-  console.log("REQUEST SESSION BEFORE LOGOUT", req.session)
-  const user = req.session.user;
+AuthRouter.post("/logout", isAuth, async (req, res) => {
+  try {
+    console.log("REQUEST SESSION BEFORE LOGOUT", req.session);
+    const user = req.session.user;
 
- req.session.destroy((err) => {
-    if (err) {
-      return res.send({
-        status: 400,
-        message: "Logout unsuccessfull",
-        error: err,
-      });
-    }
-    else{
-      return res.send({
+    req.session.destroy((err) => {
+      if (err) {
+        // Handle session destroy error
+        console.error("Error occurred during logout:", err);
+        return res.status(500).json({
+          status: 500,
+          message: "Logout Unsuccessful",
+          error: "Something went wrong during logout.",
+        });
+      }
+
+      // Successful logout
+      return res.status(200).json({
         status: 200,
-        message: "Logout Sucessfully",
+        message: "Logout Successfully",
         data: user,
       });
-    }
-  });
+    });
+  } catch (error) {
+    // Catch any other unexpected errors during logout
+    console.error("Error occurred during logout:", error);
+    return res.status(500).json({
+      status: 500,
+      message: "Error Occurred",
+      error: "Something went wrong during logout.",
+    });
+  }
 });
+
+
 
 module.exports = AuthRouter;
