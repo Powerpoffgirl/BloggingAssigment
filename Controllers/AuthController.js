@@ -114,11 +114,11 @@ AuthRouter.post("/login", async (req, res) => {
   }
 });
 
-AuthRouter.post("/logout", isAuth, (req, res) => {
+AuthRouter.post("/logout", isAuth, async(req, res) => {
   console.log("REQUEST SESSION BEFORE LOGOUT", req.session)
   const user = req.session.user;
 
-  req.session.destroy((err) => {
+ await req.session.destroy((err) => {
     if (err) {
       return res.send({
         status: 400,
