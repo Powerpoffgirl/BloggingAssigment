@@ -1,6 +1,12 @@
 const isAuth = (req, res, next) => {
   console.log("REQUEST SESSION IN ISAUTH", req.session.isAuth )
   console.log("REQUEST SESSION USER", req.session.user)
+  if(req.session.isAuth === undefined){
+    return res.send({
+      status : 401,
+      message:"Is AUTH is undefined"
+    })
+  }
   if (req.session.isAuth && req.session.user.email) {
     next();
   } else {
