@@ -89,6 +89,13 @@ AuthRouter.post("/login", async (req, res) => {
       });
     }
 
+      // Generate a JWT token
+      const token = jwt.sign(
+        { userId: userDb._id, username: userDb.username },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' } // Token expires in 1 hour
+      );
+      
     // Session-based authentication
     req.session.isAuth = true;
     req.session.user = {

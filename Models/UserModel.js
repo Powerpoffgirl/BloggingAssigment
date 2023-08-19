@@ -22,7 +22,9 @@ let User = class {
         reject("Invalid userId format");
       }
       try {
+        console.log("USER SCEHMA", UserSchema)
         const userDb = await UserSchema.findOne({ _id: userId });
+        console.log("User From DB in VerifyUserId", userDb)
         if (!userDb) {
           reject(`No user corresponding to this ${userId}`);
         }
