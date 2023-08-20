@@ -111,6 +111,7 @@ AuthRouter.post("/login", async (req, res) => {
       status: 200,
       message: "Login Successfully",
       data: userDb,
+      token:token,
     });
   } catch (error) {
     console.error("Error occurred during login:", error);
