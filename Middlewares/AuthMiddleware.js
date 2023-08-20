@@ -21,7 +21,7 @@ const isAuth = (req, res, next) => {
     // User is authenticated, proceed to the next middleware or route handler
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid token' });
+    return res.status(401).json({ message: 'Auth Middleware Invalid token' });
   }
 };
 

@@ -5,6 +5,7 @@ const Blogs = require("../Models/BlogModel");
 const BlogRouter = express.Router();
 const { followingUsersList } = require("../Models/FollowModel");
 const { isAuth } = require("../Middlewares/AuthMiddleware");
+const jwt = require('jsonwebtoken');
 
 BlogRouter.post("/create-blog", async (req, res) => {
   const { title, textBody } = req.body;
@@ -84,22 +85,24 @@ BlogRouter.get("/get-blogs", async (req, res) => {
 });
 
 BlogRouter.get("/my-blogs", async (req, res) => {
+  const skip = req.query.skip || 0;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+
   try {
-    const authorizationHeader = req.header('Authorization');
-
-    if (!authorizationHeader) {
-      return res.status(401).json({
-        status: 401,
-        message: "Unauthorized: Token not provided",
-      });
-    }
-
     // Extract the token from the header
     const token = authorizationHeader.split(' ')[1];
     console.log("TOKEN FROM MY_BLOGS", token)
     // Verify the token and extract user information
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("DECODED TOKEN", decodedToken)
     const userId = decodedToken.userId;
+    console.log("USER ID MY BLOGS", userId)
     try {
       const myBlogDb = await Blogs.myBlogs({ skip, userId });
       return res.send({
