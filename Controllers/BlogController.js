@@ -96,7 +96,7 @@ BlogRouter.get("/my-blogs", async (req, res) => {
 
     // Extract the token from the header
     const token = authorizationHeader.split(' ')[1];
-
+    console.log("TOKEN FROM MY_BLOGS", token)
     // Verify the token and extract user information
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decodedToken.userId;
