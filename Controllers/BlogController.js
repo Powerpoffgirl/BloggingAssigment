@@ -85,9 +85,10 @@ BlogRouter.get("/get-blogs", async (req, res) => {
 
 BlogRouter.get("/my-blogs", async (req, res) => {
   const skip = req.query.skip || 0;
-  const userId = req.session.user.userId;
+  console.log("REQUEST SESSION from my-blogs", req.session)
+  // const userId = req.session.user.userId;
 
-  console.log("userID from my-blogs", userId)
+
   try {
     const myBlogDb = await Blogs.myBlogs({ skip, userId });
     return res.send({
