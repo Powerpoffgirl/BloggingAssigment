@@ -84,24 +84,34 @@ BlogRouter.get("/get-blogs", async (req, res) => {
 });
 
 BlogRouter.get("/my-blogs", async (req, res) => {
-  const skip = req.query.skip || 0;
-  console.log("REQUEST SESSION from my-blogs", req.session)
-  // const userId = req.session.user.userId;
-
-
+  // Verify JWT token from the request header
+  const token = req.header('Authorization').split(' ')[1];
   try {
-    const myBlogDb = await Blogs.myBlogs({ skip, userId });
-    return res.send({
-      status: 200,
-      message: "Read success",
-      data: myBlogDb,
-    });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const skip = req.query.skip || 0;
+    const userId = decoded.userId; // Extract userId from the decoded JWT
+
+    try {
+      const myBlogDb = await Blogs.myBlogs({ skip, userId });
+      return res.send({
+        status: 200,
+        message: "Read success",
+        data: myBlogDb,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.send({
+        status: 500,
+        message: "Database error",
+        error: error,
+      });
+    }
   } catch (error) {
-    console.log(error);
-    return res.send({
-      status: 500,
-      message: "Database error",
-      error: error,
+    return res.status(401).json({
+      status: 401,
+      message: 'Unauthorized',
+      error: 'Invalid token'
     });
   }
 });

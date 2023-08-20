@@ -5,6 +5,52 @@ const User = require("../Models/UserModel");
 const { isAuth } = require("../Middlewares/AuthMiddleware");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken")
+const passport = require("passport"); // Import Passport.js
+
+
+// Define a local authentication strategy
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      const user = await User.findByUsername(username);
+
+      if (!user) {
+        return done(null, false, { message: "Incorrect username." });
+      }
+      
+      const isPasswordValid = await user.comparePassword(password);
+
+      if (!isPasswordValid) {
+        return done(null, false, { message: "Incorrect password." });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  }
+));
+
+// Serialize user to store in session
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// Deserialize user from session
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// Initialize Passport.js
+AuthRouter.use(passport.initialize());
+AuthRouter.use(passport.session());
+
+
 
 //  /auth/register
 AuthRouter.post("/register", async (req, res) => {

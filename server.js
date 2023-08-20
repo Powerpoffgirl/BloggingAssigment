@@ -12,12 +12,16 @@ const FollowRouter = require("./Controllers/FollowController");
 const cleanUpBin = require("./cron");
 const server = express();
 const cors = require("cors");
+const passport = require("passport")
+const LocalStrategy = require("passport-local").Strategy;
 
 const PORT = process.env.PORT || 8000;
 
 // middlewares
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use(passport.initialize())
+server.use(passport.session())
 
 const store = new mongoDbSession({
   uri: process.env.MONGO_URI,
