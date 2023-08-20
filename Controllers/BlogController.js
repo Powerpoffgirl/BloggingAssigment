@@ -84,14 +84,22 @@ BlogRouter.get("/get-blogs", async (req, res) => {
 });
 
 BlogRouter.get("/my-blogs", async (req, res) => {
-  // Verify JWT token from the request header
-  const token = req.header('Authorization').split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const authorizationHeader = req.header('Authorization');
 
-    const skip = req.query.skip || 0;
-    const userId = decoded.userId; // Extract userId from the decoded JWT
+    if (!authorizationHeader) {
+      return res.status(401).json({
+        status: 401,
+        message: "Unauthorized: Token not provided",
+      });
+    }
 
+    // Extract the token from the header
+    const token = authorizationHeader.split(' ')[1];
+
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
     try {
       const myBlogDb = await Blogs.myBlogs({ skip, userId });
       return res.send({
