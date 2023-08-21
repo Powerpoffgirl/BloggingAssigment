@@ -17,11 +17,9 @@ BlogRouter.post("/create-blog", async (req, res) => {
     });
   }
    const token = authorizationHeader.split(' ')[1];
-    console.log("-----------TOKEN FROM CREATE_BLOGS------------", token)
     // Verify the token and extract user information
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("DECODED TOKEN", decodedToken)
-    const userId = decodedToken.userId;
+  const userId = decodedToken.userId;
    
   const creationDateTime = new Date();
   console.log("TITLE FROM CREATE BLOGS", title, "BODY FROM CREATE BLOGS", textBody)
@@ -68,7 +66,18 @@ BlogRouter.post("/create-blog", async (req, res) => {
 //  /blog/get-blogs?skip=5
 BlogRouter.get("/get-blogs", async (req, res) => {
   const skip = req.query.skip || 0;
-  const followerUserId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const followerUserId = decodedToken.userId;
+  // const followerUserId = req.session.user.userId;
 
   try {
     const followingList = await followingUsersList({ followerUserId, skip });
@@ -147,8 +156,17 @@ BlogRouter.post("/edit-blog", async (req, res) => {
 
   const { title, textBody } = req.body.data;
   const blogId = req.body.blogId;
-  const userId = req.session.user.userId;
-
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const userId = decodedToken.userId;
   try {
     //find the blog with blogId
     const blogObj = new Blogs({ title, textBody, userId, blogId });
@@ -198,7 +216,17 @@ BlogRouter.post("/edit-blog", async (req, res) => {
 
 BlogRouter.post("/delete-blog", async (req, res) => {
   const blogId = req.body.blogId;
-  const userId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const userId = decodedToken.userId;
 
   try {
     // find the blog with blogId

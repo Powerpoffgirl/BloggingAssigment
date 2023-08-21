@@ -8,9 +8,21 @@ const {
 } = require("../Models/FollowModel");
 const { off } = require("../Schemas/FollowSchema");
 const FollowRouter = express.Router();
+const jwt = require('jsonwebtoken');
 
 FollowRouter.get("/follow-user", async (req, res) => {
-  const followerUserId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const followerUserId = decodedToken.userId;
+  // const followerUserId = req.session.user.userId;
   const followingUserId = req.body.followingUserId;
 
   //Validate followerUserId
@@ -53,7 +65,18 @@ FollowRouter.get("/follow-user", async (req, res) => {
 });
 
 FollowRouter.post("/following-list", async (req, res) => {
-  const followerUserId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const followerUserId = decodedToken.userId;
+  // const followerUserId = req.session.user.userId;
 
   const skip = req.query.skip || 0;
   //   Validate the userId
@@ -92,7 +115,18 @@ FollowRouter.post("/following-list", async (req, res) => {
 });
 
 FollowRouter.post("/follower-list", async (req, res) => {
-  const followingUserId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const followingUserId = decodedToken.userId;
+  // const followingUserId = req.session.user.userId;
   const skip = req.query.skip || 0;
 
   // validate id
@@ -124,7 +158,19 @@ FollowRouter.post("/follower-list", async (req, res) => {
 });
 
 FollowRouter.post("/unfollow-user", async (req, res) => {
-  const followerUserId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const followerUserId = decodedToken.userId;
+
+  // const followerUserId = req.session.user.userId;
   const followingUserId = req.body.followingUserId;
 
   //Validate followerUserId
