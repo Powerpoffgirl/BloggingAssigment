@@ -17,14 +17,14 @@ BlogRouter.post("/create-blog", async (req, res) => {
     });
   }
    const token = authorizationHeader.split(' ')[1];
-    console.log("TOKEN FROM CREATE_BLOGS", token)
+    console.log("-----------TOKEN FROM CREATE_BLOGS------------", token)
     // Verify the token and extract user information
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     console.log("DECODED TOKEN", decodedToken)
     const userId = decodedToken.userId;
    
   const creationDateTime = new Date();
-
+  console.log("TITLE FROM CREATE BLOGS", title, "BODY FROM CREATE BLOGS", textBody)
   // Data validation
   await BlogDataValidate({ title, textBody, userId })
     .then(async () => {
