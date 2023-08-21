@@ -9,7 +9,20 @@ const jwt = require('jsonwebtoken');
 
 BlogRouter.post("/create-blog", async (req, res) => {
   const { title, textBody } = req.body;
-  const userId = req.session.user.userId;
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized: Token not provided",
+    });
+  }
+   const token = authorizationHeader.split(' ')[1];
+    console.log("TOKEN FROM CREATE_BLOGS", token)
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("DECODED TOKEN", decodedToken)
+    const userId = decodedToken.userId;
+   
   const creationDateTime = new Date();
 
   // Data validation
