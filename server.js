@@ -26,7 +26,7 @@ const store = new mongoDbSession({
 
 server.use(
   cors({
-    origin: "http://localhost:3000", // Replace with the actual origin of your React app
+    origin: "https://64e356d6a80c180d450dbed9--lively-bubblegum-2d7311.netlify.app/login", // Replace with the actual origin of your React app
     credentials: true,
   })
 );
