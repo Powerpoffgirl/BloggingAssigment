@@ -10,7 +10,7 @@ const { off } = require("../Schemas/FollowSchema");
 const FollowRouter = express.Router();
 const jwt = require('jsonwebtoken');
 
-FollowRouter.get("/follow-user", async (req, res) => {
+FollowRouter.post("/follow-user", async (req, res) => {
   const authorizationHeader = req.header('Authorization');
   if (!authorizationHeader) {
     return res.status(401).json({
